@@ -1,1 +1,2 @@
-javac *.java
+#!/bin/sh
+javac Disassembler.java
