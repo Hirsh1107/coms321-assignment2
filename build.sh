@@ -1,2 +1,2 @@
 #!/bin/sh
-javac Disassembler.java
+javac "./Disassembler.java"
