@@ -1,11 +1,10 @@
 public class Disassembler {
   
     public static void main(String[] args) {
-       int[] binary = {1,0,0,0,1,0,1,1,0,0,0};
+       int[] binary = {0,1,0,1,0,1,0,0,1,1,1};
        int decimal = binaryToDecimal(binary);
        System.out.println(decimal);
-       System.out.print(new OpCode(decimal));
-
+       System.out.println(new OpCode(decimal));
         // if (args.length != 1) {
         //     System.exit(1);
         // }
@@ -13,6 +12,7 @@ public class Disassembler {
     }
 
     
+  
     //idk if this works yet
     private static int binaryToDecimal(int[] binaryArr) {
         int result = 0;
