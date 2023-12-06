@@ -21,6 +21,7 @@ public class OpCode {
     public OpCode(){
     }
 
+
     public int getOpCodeValue() {
         return opCodeValue;
     }
@@ -60,6 +61,8 @@ public class OpCode {
     public void setShamt(int shamt) {
         this.shamt = shamt;
     }
+
+
     
 
     @Override
@@ -109,7 +112,7 @@ public class OpCode {
         }
         
 
-
+        shamt = 0;
         switch (opCode){
         
             case 1112: 
@@ -309,7 +312,4 @@ public class OpCode {
 
 
 }
-
-
-
 
