@@ -3,8 +3,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Disassembler {
-
+    private static int[] branchAddresses = new int[64];
     public static void main(String[] args) {
+            
+
         if (args.length != 1) {
             System.out.println("Usage: java Disassembler <input_file>");
             System.exit(1);
@@ -176,24 +178,28 @@ public class Disassembler {
         if(instructionDefined) {
 			return;
 		}
+        //CB type
         opcode = instruction >>> 24;
         addr = (instruction >>> 5) & 0x7FFFFF;
         Rt = instruction & 0x1F;
         String rt = correctReg(Rt);
+        String branchString = Integer.toHexString(addr);
+    
+
         switch (opcode) {
 
             case 0b01010100: // B.COND
-                System.out.println("b.cond " + rt + ", " + addr);
+                System.out.println("b.cond " + rt + ", 0x" + branchString);
                 instructionDefined = true;
                 break;
             
             case 0b10110101: // CBNZ
-                System.out.println("CBZ " + rt + ", " + addr);
+                System.out.println("CBZ " + rt + ", 0x" + branchString);
                 instructionDefined = true;
                 break;
             
             case 0b10110100: // CBZ
-                System.out.println("CBNZ " + rt + ", " + addr);
+                System.out.println("CBNZ " + rt + ", 0x" + branchString);
                 instructionDefined = true;
                 break;
 
@@ -205,15 +211,16 @@ public class Disassembler {
 		}
         opcode = instruction >>> 26;
         addr = (instruction >>> 6) & 0x3FFFFFFF;
+        branchString = Integer.toHexString(addr);
         switch (opcode) {
 
             case 0b000101: // B
-                System.out.println("B " + addr);
+                System.out.println("B 0x" + branchString);
                 instructionDefined = true;
                 break;
             
             case 0b100101: // BL
-                System.out.println("BL" + addr);
+                System.out.println("BL 0x" + branchString);
                 instructionDefined = true;
                 break;
 
