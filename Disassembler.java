@@ -189,9 +189,36 @@ public class Disassembler {
         switch (opcode) {
 
             case 0b01010100: // B.COND
-                System.out.println("b.cond " + rt + ", 0x" + branchString);
-                instructionDefined = true;
-                break;
+            //Conds are 00000 == EQ
+            //00001 == NE
+            //01011 == LT
+            //01101 == LE
+            //01100 == GT
+            //01010 == GE
+                switch(Rt){
+                    case 0b00001: 
+                        rt = "NE";
+                        break;
+                    case 0b01011: 
+                        rt = "LT";
+                        break;
+                    case 0b01101: 
+                        rt = "LE";
+                        break;
+                    case 0b01100: 
+                        rt = "GT";
+                        break;
+                    case 0b01010: 
+                        rt = "GE";
+                        break;
+                    default:
+                        rt = "cond undefined";
+                        return;
+
+                }
+                    System.out.println("B." + rt + ", 0x" + branchString);
+                    instructionDefined = true;
+                    break;
             
             case 0b10110101: // CBNZ
                 System.out.println("CBZ " + rt + ", 0x" + branchString);
