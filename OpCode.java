@@ -21,6 +21,7 @@ public class OpCode {
     public OpCode(){
     }
 
+
     public int getOpCodeValue() {
         return opCodeValue;
     }
@@ -60,6 +61,8 @@ public class OpCode {
     public void setShamt(int shamt) {
         this.shamt = shamt;
     }
+
+
     
 
     @Override
@@ -74,11 +77,11 @@ public class OpCode {
     }
 
     public OpCode(int opCode){
-        if(opCode==581){
-            opCode = 580;
+        if(opCode==1160){
+            opCode = 1161;
         }
-        else if(opCode==585){
-            opCode = 584;
+        else if(opCode==1168){
+            opCode = 1169;
         }
         else if(opCode>=160 && opCode<=191){
             opCode = 5;
@@ -86,8 +89,30 @@ public class OpCode {
         else if(opCode>=672 && opCode<=679){
             opCode = 84;
         }
-        else if(opCode>=1184 && opCode<)
+        else if(opCode>=1184 && opCode<=1215){
+            opCode = 37;
+        }
+        else if(opCode>=1448 && opCode<=1455){
+            opCode = 181;
+        }
+        else if(opCode>=1440 && opCode<=1447){
+            opCode = 180;
+        }
+        else if(opCode>=1680 && opCode<=1681){
+            opCode = 840;
+        }
+        else if(opCode>=1424 && opCode<=1425){
+            opCode = 712;
+        }
+        else if(opCode>=1672 && opCode<=1673){
+            opCode = 836;
+        }
+        else if(opCode>=1928 && opCode<=1929){
+            opCode = 964;
+        }
         
+
+        shamt = 0;
         switch (opCode){
         
             case 1112: 
@@ -287,7 +312,4 @@ public class OpCode {
 
 
 }
-
-
-
 
