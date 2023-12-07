@@ -1,0 +1,9 @@
+test:
+
+ADDS X10, X3, X2
+B.EQ test
+B.NE test
+B.LT test
+B.LE test
+B.GT test
+B.GE test
