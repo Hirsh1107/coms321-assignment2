@@ -190,10 +190,11 @@ public class Disassembler {
 		}
         //CB type
         opcode = instruction >>> 24;
-        addr = (instruction >>> 5) & 0x7FFFFF;
+        addr = (instruction >>> 5) & 0x7FFFF; 
+        
         Rt = instruction & 0x1F;
         String rt = correctReg(Rt);
-        String branchString = Integer.toHexString(addr);
+        String branchString = Integer.toString(addr); 
     
 
         switch (opcode) {
@@ -229,17 +230,17 @@ public class Disassembler {
                         return;
 
                 }
-                    instructionString = "B." + rt + ", 0x" + branchString;
+                    instructionString = "B." + rt + ", " + branchString;
                     instructionDefined = true;
                     break;
             
             case 0b10110101: // CBNZ
-                instructionString = "CBZ " + rt + ", 0x" + branchString;
+                instructionString = "CBZ " + rt + ", " + branchString;
                 instructionDefined = true;
                 break;
             
             case 0b10110100: // CBZ
-                instructionString = "CBNZ " + rt + ", 0x" + branchString;
+                instructionString = "CBNZ " + rt + ", " + branchString;
                 instructionDefined = true;
                 break;
 
@@ -247,22 +248,24 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
-            printList.add(iCount, instructionString);
+            printList.add(iCount, instructionString+"------------");
             iCount++;
 			return;
 		}
+
         opcode = instruction >>> 26;
-        addr = (instruction >>> 6) & 0x3FFFFFFF;
-        
+        addr = instruction & 0x3FFFFFF;
+        branchString = Integer.toString(addr);
+        System.out.println(branchString);
         switch (opcode) {
 
             case 0b000101: // B
-                instructionString = "B 0x" + branchString;
+                instructionString = "B " + branchString;
                 instructionDefined = true;
                 break;
             
             case 0b100101: // BL
-                instructionString = "BL 0x" + branchString;
+                instructionString = "BL " + branchString;
                 instructionDefined = true;
                 break;
 
@@ -270,7 +273,7 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
-            printList.add(iCount, instructionString);
+            printList.add(iCount, instructionString + "----------<<<<");
             iCount++;
 			return;
 		}
