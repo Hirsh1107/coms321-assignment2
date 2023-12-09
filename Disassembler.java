@@ -1,9 +1,12 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Disassembler {
     private static int[] branchAddresses = new int[64];
+    private static ArrayList<String> printList = new ArrayList<>();
+    private static int iCount;
     public static void main(String[] args) {
             
 
@@ -22,11 +25,13 @@ public class Disassembler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        for(String s: printList){
+            System.out.println(s);
+        }
     }
 
     private static void disassemble(int instruction) {
         int opcode = instruction >>> 21;
-        int offset = 0;
         boolean instructionDefined = false;
         int Rd;
         int Rn;
@@ -35,6 +40,7 @@ public class Disassembler {
         int imm;
         int addr;
         int Rt;
+        String instructionString = "branch";
 
         //check for r-type and d-type
         Rd = instruction & 0x1F;
@@ -46,72 +52,72 @@ public class Disassembler {
         String rm = correctReg(Rm);
         switch (opcode) {
             case 0b10001011000: // ADD
-                System.out.println("ADD " + rd + ", " + rn + ", " + rm);
+                instructionString = "ADD" + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b10001010000: // AND
-                System.out.println("AND " + rd + ", " + rn + ", " + rm);
+                instructionString = "AND " + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b11010110000: // BR
-                System.out.println("BR " + rn);
+                instructionString = "BR " + rn;
                 instructionDefined = true;
                 break;
             
             case 0b11001010000: // EOR
-                System.out.println("EOR " + rd + ", " + rn + ", " + rm);
+                instructionString = "EOR " + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b11010011011: // LSL
-                System.out.println("LSL " + rd + ", " + rn + " #" + shamt);
+                instructionString = "LSL " + rd + ", " + rn + " #" + shamt;
                 instructionDefined = true;
                 break;
 
             case 0b11010011010: // LSR
-                System.out.println("LSR " + rd + ", " + rn + " #" + shamt);
+                instructionString = "LSR " + rd + ", " + rn + " #" + shamt;
                 instructionDefined = true;
                 break;
 
             case 0b10101010000: // ORR
-                System.out.println("OOR " + rd + ", " + rn + ", " + rm);
+                instructionString = "OOR " + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b11001011000: // SUB
-                System.out.println("SUB " + rd + ", " + rn + ", " + rm);
+                instructionString = "SUB " + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b11101011000: // SUBS
-                System.out.println("SUBS " + rd + ", " + rn + ", " + rm);
+                instructionString = "SUBS " + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b10011011000: // MUL
-                System.out.println("OOR " + rd + ", " + rn + ", " + rm);
+                instructionString = "OOR " + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b11111111101: // PRNT
-                System.out.println("PRNT " + rm);
+                instructionString = "PRNT " + rm;
                 instructionDefined = true;
                 break;
 
             case 0b11111111100: // PRNL
-                System.out.println("PRNL");
+                instructionString = "PRNL";
                 instructionDefined = true;
                 break;
 
             case 0b11111111110: // DUMP
-                System.out.println("DUMP");
+                instructionString = "DUMP";
                 instructionDefined = true;
                 break;
 
             case 0b11111111111: // HALT
-                System.out.println("HALT");
+                instructionString = "HALT";
                 instructionDefined = true;
                 break;
 
@@ -119,13 +125,13 @@ public class Disassembler {
             //this is not implemented yet, will probably have to do a seperate switch case
             //to calculate the the correct registers and what not
             case 0b11111000010: // LDUR
-                System.out.println("LDUR " + rd + ", [" + rn + ", #" + shamt + "]");
+                instructionString = "LDUR " + rd + ", [" + rn + ", #" + shamt + "]";
                 instructionDefined = true;
                 break;
 
             //d-type
             case 0b11111000000: // STUR
-                System.out.println("STUR " + rd + ", [" + rn + ", #" + shamt + "]");
+                instructionString = "STUR " + rd + ", [" + rn + ", #" + shamt + "]";
                 instructionDefined = true;
                 break;
 
@@ -133,6 +139,8 @@ public class Disassembler {
                 break;
         }
         if(instructionDefined) {
+            printList.add(iCount, instructionString);
+            iCount++;
 			return;
 		}
         //i-type
@@ -144,38 +152,40 @@ public class Disassembler {
         rn = correctReg(Rn);
         switch (opcode) {
             case 0b1001000100: // ADDI
-                System.out.println("ADDI " + rd + ", " + rn + ",  #" + imm);
+                instructionString = "ADDI " + rd + ", " + rn + ",  #" + imm;
                 instructionDefined = true;
                 break;
 
             case 0b1001001000: // ANDI
-                System.out.println("ANDI " + rd + ", " + rn + ",  #" + imm);
+                instructionString = "ANDI " + rd + ", " + rn + ",  #" + imm;
                 instructionDefined = true;
                 break;
 
             case 0b1101001000: // EORI
-                System.out.println("EORI " + rd + ", " + rn + ",  #" + imm);
+                instructionString = "EORI " + rd + ", " + rn + ",  #" + imm;
                 instructionDefined = true;
                 break;
 
             case 0b1011001000: // ORRI
-                System.out.println("ORRI " + rd + ", " + rn + ",  #" + imm);
+                instructionString = "ORRI " + rd + ", " + rn + ",  #" + imm;
                 instructionDefined = true;
                 break;
 
             case 0b1101000100: // SUBI
-                System.out.println("SUBI " + rd + ", " + rn + ",  #" + imm);
+                instructionString = "SUBI " + rd + ", " + rn + ",  #" + imm;
                 instructionDefined = true;
                 break;
 
             case 0b1111000100: // SUBIS
-                System.out.println("SUBIS " + rd + ", " + rn + ",  #" + imm);
+                instructionString = "SUBIS " + rd + ", " + rn + ",  #" + imm;
                 instructionDefined = true;
                 break;
             default:
                 break;
         }
         if(instructionDefined) {
+            printList.add(iCount, instructionString);
+            iCount++;
 			return;
 		}
         //CB type
@@ -196,6 +206,9 @@ public class Disassembler {
             //01100 == GT
             //01010 == GE
                 switch(Rt){
+                    case 0b00000: 
+                        rt = "EQ";
+                        break;
                     case 0b00001: 
                         rt = "NE";
                         break;
@@ -216,17 +229,17 @@ public class Disassembler {
                         return;
 
                 }
-                    System.out.println("B." + rt + ", 0x" + branchString);
+                    instructionString = "B." + rt + ", 0x" + branchString;
                     instructionDefined = true;
                     break;
             
             case 0b10110101: // CBNZ
-                System.out.println("CBZ " + rt + ", 0x" + branchString);
+                instructionString = "CBZ " + rt + ", 0x" + branchString;
                 instructionDefined = true;
                 break;
             
             case 0b10110100: // CBZ
-                System.out.println("CBNZ " + rt + ", 0x" + branchString);
+                instructionString = "CBNZ " + rt + ", 0x" + branchString;
                 instructionDefined = true;
                 break;
 
@@ -234,20 +247,22 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
+            printList.add(iCount, instructionString);
+            iCount++;
 			return;
 		}
         opcode = instruction >>> 26;
         addr = (instruction >>> 6) & 0x3FFFFFFF;
-        branchString = Integer.toHexString(addr);
+        
         switch (opcode) {
 
             case 0b000101: // B
-                System.out.println("B 0x" + branchString);
+                instructionString = "B 0x" + branchString;
                 instructionDefined = true;
                 break;
             
             case 0b100101: // BL
-                System.out.println("BL 0x" + branchString);
+                instructionString = "BL 0x" + branchString;
                 instructionDefined = true;
                 break;
 
@@ -255,9 +270,11 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
+            printList.add(iCount, instructionString);
+            iCount++;
 			return;
 		}
-        System.out.printf("Unknown opcode: %d%n", opcode);
+        printList.add("Unknown opcode:"+ opcode);
     }
 
     public static String correctReg(int register) {
