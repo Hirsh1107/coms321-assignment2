@@ -191,7 +191,9 @@ public class Disassembler {
         //CB type
         opcode = instruction >>> 24;
         addr = (instruction >>> 5) & 0x7FFFF; 
-        
+        if ((addr & (1 << 25)) != 0) {
+            addr |= 0xFC000000; // Sign-extend if the leftmost extracted bit is 1
+        }
         Rt = instruction & 0x1F;
         String rt = correctReg(Rt);
         String branchString = Integer.toString(addr); 
@@ -248,15 +250,17 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
-            printList.add(iCount, instructionString+"------------");
+            printList.add(iCount, instructionString);
             iCount++;
 			return;
 		}
 
         opcode = instruction >>> 26;
         addr = instruction & 0x3FFFFFF;
+        if ((addr & (1 << 25)) != 0) {
+            addr |= 0xFC000000; // Sign-extend if the leftmost extracted bit is 1
+        }
         branchString = Integer.toString(addr);
-        System.out.println(branchString);
         switch (opcode) {
 
             case 0b000101: // B
@@ -273,7 +277,7 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
-            printList.add(iCount, instructionString + "----------<<<<");
+            printList.add(iCount, instructionString);
             iCount++;
 			return;
 		}
