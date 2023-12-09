@@ -2,13 +2,16 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Disassembler {
     private static int[] branchAddresses = new int[64];
     private static ArrayList<String> printList = new ArrayList<>();
+    private static HashMap<Integer, String> branchList = new HashMap<>();
     private static int iCount;
+    private static int branchNo = 0;
     public static void main(String[] args) {
-            
+        
 
         if (args.length != 1) {
             System.out.println("Usage: java Disassembler <input_file>");
@@ -25,8 +28,15 @@ public class Disassembler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for(String s: printList){
-            System.out.println(s);
+         
+        for(int i = 0; i < printList.size(); i++){
+            if(branchList.get(i) != null) {
+                System.out.println(printList.get(i));
+                System.out.println(branchList.get(i) + ":");
+            }
+            else{
+            System.out.println(printList.get(i));
+            }
         }
     }
 
@@ -52,7 +62,7 @@ public class Disassembler {
         String rm = correctReg(Rm);
         switch (opcode) {
             case 0b10001011000: // ADD
-                instructionString = "ADD" + rd + ", " + rn + ", " + rm;
+                instructionString = "ADD " + rd + ", " + rn + ", " + rm;
                 instructionDefined = true;
                 break;
 
@@ -232,17 +242,17 @@ public class Disassembler {
                         return;
 
                 }
-                    instructionString = "B." + rt + ", " + branchString;
+                    instructionString = "B." + rt+ " ";
                     instructionDefined = true;
                     break;
             
             case 0b10110101: // CBNZ
-                instructionString = "CBZ " + rt + ", " + branchString;
+                instructionString = "CBZ " + rt+ " ";
                 instructionDefined = true;
                 break;
             
             case 0b10110100: // CBZ
-                instructionString = "CBNZ " + rt + ", " + branchString;
+                instructionString = "CBNZ " + rt + " ";
                 instructionDefined = true;
                 break;
 
@@ -250,7 +260,12 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
-            printList.add(iCount, instructionString);
+            int pos = iCount - 1 + addr;
+            if(branchList.get(pos) == null) {
+                branchList.put(pos, "branch" + branchNo);
+                branchNo++;
+            }
+            printList.add(iCount, instructionString + branchList.get(pos));
             iCount++;
 			return;
 		}
@@ -264,12 +279,12 @@ public class Disassembler {
         switch (opcode) {
 
             case 0b000101: // B
-                instructionString = "B " + branchString;
+                instructionString = "B ";
                 instructionDefined = true;
                 break;
             
             case 0b100101: // BL
-                instructionString = "BL " + branchString;
+                instructionString = "BL ";
                 instructionDefined = true;
                 break;
 
@@ -277,7 +292,12 @@ public class Disassembler {
 			    break;
         }
         if(instructionDefined) {
-            printList.add(iCount, instructionString);
+            int pos = iCount - 1 + addr;
+            if(branchList.get(pos) == null) {
+                branchList.put(pos, "branch" + branchNo);
+                branchNo++;
+            }
+            printList.add(iCount, instructionString + branchList.get(pos));
             iCount++;
 			return;
 		}
